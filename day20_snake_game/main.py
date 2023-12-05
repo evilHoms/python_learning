@@ -1,29 +1,25 @@
-from turtle import Turtle, Screen
+from turtle import Screen
+from snake import Snake
+
+WIDTH = 600
+HEIGHT = 600
 
 s = Screen()
-s.setup(600, 600)
+s.setup(WIDTH, HEIGHT)
 s.bgcolor('black')
 s.title('Snake Game')
+s.tracer(0)
 
-snake_coords = [(0, 0), (-20, 0), (-40, 0)]
-snake = []
+snake = Snake(width=WIDTH, height=HEIGHT)
 
-for coord in snake_coords:
-    t = Turtle('square')
-    t.color('white')
-    t.width(20)
-    t.penup()
-    t.goto(coord)
-    snake.append(t)
-
+s.update()
 game_on = True
 
-while game_on:
-    snake_coords.pop()
-    snake_coords.insert(0, (snake_coords[0][0] + 20, 0))
-    for i in range(len(snake_coords)):
-        snake[i].goto(snake_coords[i])
-        
-    
+s.listen()
+s.onkey(snake.turn_left, 'a')
+s.onkey(snake.turn_right, 'd')
 
-s.exitonclick()
+while game_on:
+    if not snake.make_step():
+        game_on = False
+    s.update()
