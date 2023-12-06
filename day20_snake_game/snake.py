@@ -13,6 +13,9 @@ class Snake():
         self.win_height = height
         self.coords = [pos]
         self.snake = []
+        self.should_grow = False
+        self.score = 0
+        
         last_pos_x = pos[0]
 
         for _ in range(1, length):
@@ -20,18 +23,20 @@ class Snake():
             self.coords.append((last_pos_x, pos[1]))
             
         for coord in self.coords:
-            t = Turtle('square')
-            t.color('white')
-            t.width(STEP)
-            t.penup()
-            t.goto(coord)
-            self.snake.append(t)
+            self.grow(coord)
+            
+        self.head = self.snake[0]
             
     def make_step(self, delay=.1):
-        self.coords.pop()
+        if self.should_grow:
+            self.should_grow = False
+        else:
+            self.coords.pop()
+
         self.coords.insert(0, (self.coords[0][0] + self.heading[0], self.coords[0][1] + self.heading[1]))
-        for i in range(len(self.coords)):
+        for i in range(len(self.snake)):
             self.snake[i].goto(self.coords[i])
+
             if i != 0 and self.check_tail(i):
                 print('Ah, Tail!')
                 return False
@@ -39,11 +44,22 @@ class Snake():
                 print('Ah, Border!')
                 return False
             
+        if len(self.coords) > len(self.snake):
+            self.grow(self.coords[len(self.coords) - 1])
+            
         sleep(delay)
         self.check_border()
 
         self.can_turn = True
         return True
+    
+    def grow(self, coord):
+        t = Turtle('square')
+        t.color('white')
+        t.shapesize(STEP / 20)
+        t.penup()
+        t.goto(coord)
+        self.snake.append(t)
         
     def turn_left(self):
         if not self.can_turn:
@@ -79,3 +95,7 @@ class Snake():
     def check_tail(self, i):
         if self.coords[i][0] == self.coords[0][0] and self.coords[i][1] == self.coords[0][1]:
             return True
+        
+    def eat(self):
+        self.score += 1
+        self.should_grow = True
