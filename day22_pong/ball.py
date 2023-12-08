@@ -5,7 +5,8 @@ class Ball(Turtle):
     def __init__(self, speed):
         super().__init__()
         
-        self.ball_speed = speed
+        self.base_speed = speed
+        self.ball_speed = [speed[0], speed[1]]
         self.dir = [-1, 1]
         
         self.penup()
@@ -22,9 +23,19 @@ class Ball(Turtle):
         self.dir[1] *= -1
             
     def bounce_x_to_left(self):
+        self.ball_speed[0] *= 1.1
+        self.ball_speed[1] *= 1.1
         self.dir[0] = -1
         
     def bounce_x_to_right(self):
+        self.ball_speed[0] *= 1.1
+        self.ball_speed[1] *= 1.1
         self.dir[0] = 1
+        
+    def reset(self):
+        self.dir = [self.dir[0] * -1, self.dir[1] * -1]
+        self.goto((0, 0))
+        self.ball_speed[0] = self.base_speed[0]
+        self.ball_speed[1] = self.base_speed[1]
         
     
