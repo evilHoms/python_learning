@@ -32,14 +32,22 @@ game_on = True
 
 while game_on:
     sleep(0.01)
-    s.update()
     
     t.move_cars()
-    # TODO collision check
+    
+    for row in t.car_rows:
+        for car in row:
+            if car.check_collision(p):
+                game_on = False
+                m.game_over()
     
     if p.ycor() >= Y_BORDER:
         m.lvl_up()
         m.print_level()
         p.to_start()
         t.inc_difficulty()
+        
+    s.update()
+        
+s.exitonclick()
         
