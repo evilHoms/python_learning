@@ -6,28 +6,17 @@ STEP = 20
 class Snake():
     def __init__(self, width, height, pos=(0, 0), length=3):
         self.pos = pos
-        self.lenght = length
+        self.length = length
         self.heading = (STEP, 0)
         self.can_turn = True
         self.win_width = width
         self.win_height = height
-        self.coords = [pos]
-        self.snake = []
         self.should_grow = False
         self.score = 0
-        
-        last_pos_x = pos[0]
-
-        for _ in range(1, length):
-            last_pos_x -= STEP
-            self.coords.append((last_pos_x, pos[1]))
+        self.snake = []
+        self.reset()
             
-        for coord in self.coords:
-            self.grow(coord)
-            
-        self.head = self.snake[0]
-            
-    def make_step(self, delay=.1):
+    def make_step(self, delay=.5):
         if self.should_grow:
             self.should_grow = False
         else:
@@ -38,10 +27,8 @@ class Snake():
             self.snake[i].goto(self.coords[i])
 
             if i != 0 and self.check_tail(i):
-                print('Ah, Tail!')
                 return False
             if i == 0 and self.check_border():
-                print('Ah, Border!')
                 return False
             
         if len(self.coords) > len(self.snake):
@@ -99,3 +86,22 @@ class Snake():
     def eat(self):
         self.score += 1
         self.should_grow = True
+        
+    def reset(self):
+        self.coords = [self.pos]
+        t = Turtle()
+        t.clear()
+        if self.snake:
+            for seg in self.snake:
+                seg.goto(1000, 1000)
+        self.snake.clear()
+        last_pos_x = self.pos[0]
+
+        for _ in range(1, self.length):
+            last_pos_x -= STEP
+            self.coords.append((last_pos_x, self.pos[1]))
+            
+        for coord in self.coords:
+            self.grow(coord)
+            
+        self.head = self.snake[0]

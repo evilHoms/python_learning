@@ -21,16 +21,17 @@ score = Score(HEIGHT)
 food.to_rand_pos()
 
 s.update()
-game_on = True
 
 s.listen()
 s.onkey(snake.turn_left, 'a')
 s.onkey(snake.turn_right, 'd')
 
-while game_on:
-    if not snake.make_step(1 / SPEED):
-        game_on = False
+while True:
     s.update()
+
+    if not snake.make_step(1 / SPEED):
+        score.reset()
+        snake.reset()
     
     if snake.head.distance(food) < FOOD_SIZE * 1.5:
         snake.eat()
