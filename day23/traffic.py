@@ -30,18 +30,19 @@ class Car(Turtle):
 class Traffic:
     
     def __init__(self, x_start: int, y_start: int) -> None:
-        self.rows = 10
+        self.rows = 13
         self.speed = 1
-        self.cars_in_row = 1
         self.car_rows = []
         self.x_start = x_start
         self.y_start = y_start
         self.car_size = 20
         self.row_gap = 20
         
-    def new_car(self, row_number, start_point):
+    def new_car(self, row_number, hidden_on_create):
         c = Car()
-        rand_x_offset = randint(0, self.x_start * 2)
+        start_point = -self.x_start if not hidden_on_create else self.x_start
+        offset_k = 3 if not hidden_on_create else 1
+        rand_x_offset = randint(0, self.x_start * offset_k)
         c.goto((start_point + rand_x_offset, (self.car_size + self.row_gap) * row_number  + self.y_start))
         c.set_speed(self.speed)
         return c
@@ -54,8 +55,7 @@ class Traffic:
         self.car_rows = []
         for i in range(self.rows):
             self.car_rows.append([])
-            for _ in range(self.cars_in_row):
-                self.car_rows[i].append(self.new_car(i, -self.x_start))
+            self.car_rows[i].append(self.new_car(i, False))
     
     def move_cars(self):
         for car_row in self.car_rows:
@@ -67,10 +67,8 @@ class Traffic:
         
     def inc_difficulty(self) -> None:
         self.speed += 1
-        self.cars_in_row += 1
         
         for i in range(self.rows):
-            self.car_rows[i].append(self.new_car(i, self.x_start))
             for car in self.car_rows[i]:
                 car.set_speed(self.speed)
                 
