@@ -104,4 +104,5 @@ class Snake():
         for coord in self.coords:
             self.grow(coord)
             
+        self.heading = (STEP, 0)
         self.head = self.snake[0]
